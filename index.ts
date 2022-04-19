@@ -5,6 +5,8 @@ class UnoSort {
   private stack: Array<Card> = [];
 
   public start(cardAmount: number) {
+    // Eventlistener registrieren
+    this.initializeEventListeners();
     // Stapel erzeugen und mischen
     this.generateStack();
     console.log(
@@ -27,6 +29,33 @@ class UnoSort {
       "-Spielerhand-sortiert-----------------------------------------------"
     );
     console.log(this.hand);
+    // Visualisieren
+    this.printHand();
+    this.printStackSize();
+  }
+
+  initializeEventListeners() {
+    let pickCardBtn = document.getElementById("pickCard");
+    pickCardBtn.addEventListener("click", () => {
+      this.pickCards(1);
+      this.sortHand();
+      this.printHand();
+      this.printStackSize();
+    });
+    let pickTwoCardBtn = document.getElementById("pickTwoCards");
+    pickTwoCardBtn.addEventListener("click", () => {
+      this.pickCards(2);
+      this.sortHand();
+      this.printHand();
+      this.printStackSize();
+    });
+    let pickFourCardBtn = document.getElementById("pickFourCards");
+    pickFourCardBtn.addEventListener("click", () => {
+      this.pickCards(4);
+      this.sortHand();
+      this.printHand();
+      this.printStackSize();
+    });
   }
 
   generateStack() {
@@ -373,12 +402,25 @@ class UnoSort {
     this.hand = [];
     sortedHandArray.forEach((colorCard) => this.hand.push(...colorCard));
   }
+
+  printHand() {
+    let handDiv = document.getElementById("playerHand");
+    let handSizeSpan = document.getElementById("handSize");
+    handSizeSpan.innerText = `(${this.hand.length.toString()})`;
+    handDiv.innerHTML = "";
+    this.hand.forEach((card) => card.showInHand());
+  }
+
+  printStackSize() {
+    let stackSize = document.getElementById("stackSize");
+    stackSize.innerText = `(${this.stack.length.toString()})`;
+  }
 }
 
 type CardColors = "red" | "yellow" | "green" | "blue";
 type SpecialCardColor = "black";
 class Card {
-  private color: CardColors | SpecialCardColor;
+  protected color: CardColors | SpecialCardColor;
   protected value: number;
 
   constructor(color) {
@@ -392,6 +434,8 @@ class Card {
   getValue() {
     return this.value;
   }
+
+  showInHand() {}
 }
 
 type NumberRange<T extends number> = number extends T ? number : _Range<T, []>;
@@ -411,6 +455,15 @@ class NumberCard extends Card {
   getNumber() {
     return this.number;
   }
+
+  showInHand() {
+    let handDiv = document.getElementById("playerHand");
+    let cardDiv = document.createElement("div");
+    cardDiv.setAttribute("class", "card");
+    cardDiv.innerHTML = `<p class="cardTitle">${this.number}</p>`;
+    cardDiv.setAttribute("style", `background: ${this.color};`);
+    handDiv.appendChild(cardDiv);
+  }
 }
 
 type ActionCardRange = "skip" | "reverse" | "double";
@@ -426,6 +479,15 @@ class ActionCard extends Card {
   getAction() {
     return this.action;
   }
+
+  showInHand() {
+    let handDiv = document.getElementById("playerHand");
+    let cardDiv = document.createElement("div");
+    cardDiv.setAttribute("class", "card");
+    cardDiv.innerHTML = `<p class="cardTitle">${this.action}</p>`;
+    cardDiv.setAttribute("style", `background: ${this.color}`);
+    handDiv.appendChild(cardDiv);
+  }
 }
 
 type SpecialActionCardRange = "quad" | "choose";
@@ -440,6 +502,15 @@ class SpecialActionCard extends Card {
 
   getAction() {
     return this.action;
+  }
+
+  showInHand() {
+    let handDiv = document.getElementById("playerHand");
+    let cardDiv = document.createElement("div");
+    cardDiv.setAttribute("class", "card");
+    cardDiv.innerHTML = `<p class="cardTitle">${this.action}</p>`;
+    cardDiv.setAttribute("style", `background: ${this.color}; color: white`);
+    handDiv.appendChild(cardDiv);
   }
 }
 
