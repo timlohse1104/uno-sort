@@ -7,6 +7,26 @@ class UnoSort {
     }
     start(cardAmount) {
         // Eventlistener registrieren
+        this.initializeEventListeners();
+        // Stapel erzeugen und mischen
+        this.generateStack();
+        console.log("-Anzahl-------------------------------------------------------------");
+        console.log(this.stack.length);
+        console.log("-Gemischt-----------------------------------------------------------");
+        console.log(this.stack);
+        // Anzahl Karten ziehen
+        this.pickCards(cardAmount);
+        console.log("-Spielerhand-unsortiert---------------------------------------------");
+        console.log(this.hand);
+        // Hand sortieren
+        this.sortHand();
+        console.log("-Spielerhand-sortiert-----------------------------------------------");
+        console.log(this.hand);
+        // Visualisieren
+        this.printHand();
+        this.printStackSize();
+    }
+    initializeEventListeners() {
         let pickCardBtn = document.getElementById("pickCard");
         pickCardBtn.addEventListener("click", () => {
             this.pickCards(1);
@@ -28,23 +48,6 @@ class UnoSort {
             this.printHand();
             this.printStackSize();
         });
-        // Stapel erzeugen und mischen
-        this.generateStack();
-        console.log("-Anzahl-------------------------------------------------------------");
-        console.log(this.stack.length);
-        console.log("-Gemischt-----------------------------------------------------------");
-        console.log(this.stack);
-        // Anzahl Karten ziehen
-        this.pickCards(cardAmount);
-        console.log("-Spielerhand-unsortiert---------------------------------------------");
-        console.log(this.hand);
-        // Hand sortieren
-        this.sortHand();
-        console.log("-Spielerhand-sortiert-----------------------------------------------");
-        console.log(this.hand);
-        // Visualisieren
-        this.printHand();
-        this.printStackSize();
     }
     generateStack() {
         // Stapelkonfiguration
